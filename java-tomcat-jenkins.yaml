@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: update the cache
+    apt:
+    - name: update
+      update_cache: yes
+  - name: install java 8 
+    apt:
+    - name: java-1.8.0-openjdk.x86_64
+      state: present
+  - name: install tomcat 8
+    apt:
+    - name: tomcat
+      state: present
+  - name: download jenkins to webapps folder
+    get_url:
+    - url: http://mirror.serverion.com/jenkins/war-stable/2.222.3/jenkins.war
+      dest: /usr/share/tomcat/webapps/jenkins.war
+  - name: enable and start tomcat
+    service:
+    - name: tomcat
+      state: started
+      enabled: yes
+  - name: install maven
+    apt:
+    - name: maven
+      state: present
