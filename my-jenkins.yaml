@@ -1,0 +1,23 @@
+---
+- hosts: appserver
+  become: yes
+  tasks:
+  - name: install openjdk 8
+    apt:
+      name: openjdk-8-jdk
+      state: present
+  - name: download tomcat
+    get_url:
+      url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.55/bin/apache-tomcat-8.5.55.tar.gz
+      dest=/home/ubuntu/tomcat
+  - name: Extract archive
+    unarchive: src=/home/ubuntu/tomcat/apache-tomcat-8.5.55.tar.gz dest=/usr/share/tomcat
+  - name: start apache-tomcat-8.5.55
+    shell: /usr/share/tomcat/apache-tomcat-8.5.55/bin/startup.sh
+  - name: download jenkins to webapps folder
+    get_url:
+      url: http://mirror.serverion.com/jenkins/war-stable/2.222.3/jenkins.war
+      dest: /usr/share/tomcat/webapps/jenkins.war
+  - name: start apache-tomcat-8.5.55
+    shell: /usr/share/tomcat/apache-tomcat-8.5.55/bin/startup.sh
+    
