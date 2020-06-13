@@ -1,5 +1,5 @@
 ---
-- hosts: appserver
+- hosts: localhost
   become: yes
   tasks:
   - name: install openjdk 8
@@ -9,9 +9,11 @@
   - name: download tomcat
     get_url:
       url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.55/bin/apache-tomcat-8.5.55.tar.gz
-      dest=/home/ubuntu/tomcat
+      dest: /home/ubuntu/tomcat
   - name: Extract archive
-    unarchive: src=/home/ubuntu/tomcat/apache-tomcat-8.5.55.tar.gz dest=/usr/share/tomcat
+    unarchive: 
+      src: /home/ubuntu/tomcat/apache-tomcat-8.5.55.tar.gz 
+      dest: /usr/share/tomcat
   - name: start apache-tomcat-8.5.55
     shell: /usr/share/tomcat/apache-tomcat-8.5.55/bin/startup.sh
   - name: download jenkins to webapps folder
