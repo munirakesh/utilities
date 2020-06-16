@@ -8,22 +8,45 @@
       update_cache: yes
   - name: install java 8 
     apt:
-    - name: java-1.8.0-openjdk.x86_64
+    - name: openjdk-8-jdk
       state: present
-  - name: install tomcat 8
-    apt:
-    - name: tomcat
-      state: present
-  - name: download jenkins to webapps folder
-    get_url:
-    - url: http://mirror.serverion.com/jenkins/war-stable/2.222.3/jenkins.war
-      dest: /usr/share/tomcat/webapps/jenkins.war
-  - name: enable and start tomcat
-    service:
-    - name: tomcat
+  - name: add tomcat group
+    group: 
+      name: tomcat
+  - name: add tomcat user
+    user:
+      name: tomcat
+      group: tomcat
+      home: /usr/share/tomcat
+      createhome: no
+  - user: name: create /opt/tomcat directory
+    file:
+      path: /opt/tomcat
+      state: directory
+      mode: 0755
+  - name: download & unarchive
+    unarchive:
+      src: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.55/bin/apache-tomcat-8.5.55.tar.gz
+      dest: /opt/tomcat
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+  - name: Change ownership
+    file:
+      path: /opt/tomcat
+      owner: tomcat
+      group: tomcat
+      mode: "u+rwx,g+rx,o=rx"
+      recurse: yes
+      state: directory
+  - name: Copy Tomcat service 
+    copy:
+       src: tomcat.service
+       dest: /etc/systemd/system/
+       mode: 0755
+
+  - name: Start and enable Tomcat service
+    systemd:
+      name: tomcat
       state: started
-      enabled: yes
-  - name: install maven
-    apt:
-    - name: maven
-      state: present
+      enabled: true
+      daemon_reload: true

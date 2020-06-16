@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: update cache on ubuntu
+    apt:
+    - name: update
+      update_cache: yes
+  - name: install java 8
+    apt:
+    - name: openjdk-8-jdk
+      state: present
+  - environment:
+    - JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      export JAVA_HOME
+      export PATH=PATH:$JAVA_HOME/bin 
