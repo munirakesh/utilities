@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   become: yes
+  Gathering Facts: no
   tasks:
   - name: install openjdk 8
     apt:
