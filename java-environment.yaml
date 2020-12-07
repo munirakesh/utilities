@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   become: yes
+  Gathering Facts: no
   tasks:
   - name: update cache on ubuntu
     apt:
